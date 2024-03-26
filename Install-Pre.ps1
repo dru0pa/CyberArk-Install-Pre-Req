@@ -1,4 +1,5 @@
 #A script to Install some of the prerequisites for CyberArk.
+#Place All files in a Folder called "Install-Folder"
 #The script looks to install Chrome Enterprise.
 #The script looks to install NotePad++(update the version as required)
 #The script looks to install both vcredist_x64.exe and vcredist_x86.exe
@@ -208,7 +209,7 @@ Write-Host "Chrome has been Installed and disabled services"
 
 Write-Host "Group Police Report check"
 Write-Host "Make sure there are no GPOs listed"
-gpresult /h C:\Users\%Username%\LocalGrpPolReport.html
-start chrome "file:///C:/Users/%username%/LocalGrpPolReport.html"
+gpresult /h "C:\Install-Folder\LocalGrpPolReport.html"
+start chrome "file:///C:/Install-Folder/LocalGrpPolReport.html"
 Write-Host "Group Police Report check finished"
 Write-Host "Finished the Script"
