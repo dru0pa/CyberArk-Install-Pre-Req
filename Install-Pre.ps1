@@ -56,7 +56,7 @@ function InstallNotepadPlusPlus {
   # Check if the installer file exists
   if (Test-Path "$scriptPathNP\$installerFileNP") {
     # Install silently (may require additional arguments depending on installer)
-    Write-Host "Installing Notepad++ from local file: $installerFile..."
+    Write-Host "Installing Notepad++ from local file: $installerFileNP..."
     Start-Process -FilePath "$scriptPathNP\$installerFileNP" -ArgumentList "/S" -Wait -NoNewWindow
   } else {
     Write-Error "Error: Installer file '$installerFileNP' not found in the script folder."
@@ -114,13 +114,13 @@ $installerFilevc2 = "vcredist_x64.exe"
 function InstallVCRedistLocal {
   param(
     [Parameter(Mandatory=$true)]
-    [string] $installerFile
+    [string] $installerFilevc2
   )
 
   # Check if the installer file exists
   if (Test-Path "$scriptPathvc2\$installerFilevc2") {
     # Install silently (with error handling)
-    Write-Host "Installing Visual C++ Redistributable (x64) from local file: $installerFile..."
+    Write-Host "Installing Visual C++ Redistributable (x64) from local file: $installerFilevc2..."
     try {
       Start-Process -FilePath "$scriptPathvc2\$installerFilevc2" -ArgumentList "/quiet /norestart" -Wait -NoNewWindow
     } catch {
