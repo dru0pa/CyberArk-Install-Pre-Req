@@ -6,8 +6,7 @@
 #It will also disable updates to Chrome via Service and ScheduledTask by disabling them.
 #Writen By Andrew Price.
 
-
-
+Write-Host "Start Chrome install"
 
 # Define script location
 $scriptPathG = Get-Location
@@ -22,24 +21,23 @@ function InstallChromeLocal {
     [string] $installerFileG  # Name of the installer file
   )
 
-  # Check if installer file exists
+  # Check if the installer file exists
   if (Test-Path "$scriptPathG\$installerFileG") {
     # Install Chrome silently
     Write-Host "Installing Chrome Enterprise from local file: $installerFileG..."
     Start-Process -FilePath "$scriptPathG\$installerFileG" "/quiet /norestart" -Wait
     Write-Host "Chrome Enterprise installation complete."
   } else {
-    Write-Error "Error: Installer file '$installerFileG' not found in script folder."
+    Write-Error "Error: Installer file '$installerFileG' not found in the script folder."
   }
 }
 
 # Install Chrome Enterprise
 InstallChromeLocal -installerFileG $installerFileG
 
-Write-Host "Chrome Enterprise installation complete (if local file was found)."
+Write-Host "Chrome Enterprise installation complete (if the local file was found)."
 
-
-
+Write-Host "Start NotePadd++ install"
 
 # Define script location
 $scriptPathNP = Get-Location
@@ -54,20 +52,20 @@ function InstallNotepadPlusPlus {
     [string] $installerFileNP  # Name of the installer file
   )
 
-  # Check if installer file exists
+  # Check if the installer file exists
   if (Test-Path "$scriptPathNP\$installerFileNP") {
     # Install silently (may require additional arguments depending on installer)
     Write-Host "Installing Notepad++ from local file: $installerFile..."
     Start-Process -FilePath "$scriptPathNP\$installerFileNP" -ArgumentList "/S" -Wait -NoNewWindow
   } else {
-    Write-Error "Error: Installer file '$installerFileNP' not found in script folder."
+    Write-Error "Error: Installer file '$installerFileNP' not found in the script folder."
   }
 }
 
 # Install Notepad++
 InstallNotepadPlusPlus -installerFileNP $installerFileNP
 
-Write-Host "Notepad++ installation complete (if local file was found)."
+Write-Host "Notepad++ installation complete (if the local file was found)."
 
 
 # Install vc
@@ -85,7 +83,7 @@ function InstallVCRedistLocal {
     [string] $installerFilevc1
   )
 
-  # Check if installer file exists
+  # Check if the installer file exists
   if (Test-Path "$scriptPathvc1\$installerFilevc1") {
     # Install silently (with error handling)
     Write-Host "Installing Visual C++ Redistributable (x86) from local file: $installerFilevc1..."
@@ -95,7 +93,7 @@ function InstallVCRedistLocal {
       Write-Error "Error installing VC++ Redistributable (x86): $($_.Exception.Message)"
     }
   } else {
-    Write-Error "Error: Installer file '$installerFilevc1' not found in script folder."
+    Write-Error "Error: Installer file '$installerFilevc1' not found in the script folder."
   }
 }
 
@@ -118,7 +116,7 @@ function InstallVCRedistLocal {
     [string] $installerFile
   )
 
-  # Check if installer file exists
+  # Check if the installer file exists
   if (Test-Path "$scriptPathvc2\$installerFilevc2") {
     # Install silently (with error handling)
     Write-Host "Installing Visual C++ Redistributable (x64) from local file: $installerFile..."
@@ -128,7 +126,7 @@ function InstallVCRedistLocal {
       Write-Error "Error installing VC++ Redistributable (x64): $($_.Exception.Message)"
     }
   } else {
-    Write-Error "Error: Installer file '$installerFilevc2' not found in script folder."
+    Write-Error "Error: Installer file '$installerFilevc2' not found in the script folder."
   }
 }
 
@@ -138,8 +136,7 @@ InstallVCRedistLocal -installerFile $installerFilevc2
 Write-Host "Visual C++ Redistributable (x64) installation complete (if local file found and no errors occurred)."
 
 
-
-
+Write-Host ".Net install started"
 
 #install .Net
 
@@ -155,7 +152,7 @@ $installerPath = "$scriptPathN\$installerFileN"
 
 # Check if .NET 4.8 is already installed
 if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Version\4.8")) {
-  # Check if local installer file exists
+  # Check if the local installer file exists
   if (Test-Path $installerPath) {
     # Install .NET 4.8 silently
     Start-Process -FilePath $installerPath -ArgumentList "/q /norestart" -Wait -NoNewWindow
@@ -167,7 +164,7 @@ if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Versio
   Write-Host ".NET Framework 4.8 is already installed."
 }
 
-# Clean up is not recommended for local installer (commented out)
+# Clean-up is not recommended for local installers (commented out)
 # # Remove the local installer (optional)
 # # Remove-Item -Path $installerPath -Force
 
@@ -205,3 +202,11 @@ Add-Content $logFilePath "`nThe service 'gupdatem' has been Disabled."
 
 # Show the contents of the log file
 Get-Content $logFilePath
+
+
+Write-Host "Chrome has been Installed and disabled services"
+
+Write-Host "Group Police Report check"
+Write-Host "Make sure there are no GPOs listed"
+gpresult /h C:\Users\%Username%\LocalGrpPolReport.html
+start chrome "file:///C:/Users/%username%/LocalGrpPolReport.html"
