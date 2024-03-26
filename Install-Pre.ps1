@@ -210,3 +210,5 @@ Write-Host "Group Police Report check"
 Write-Host "Make sure there are no GPOs listed"
 gpresult /h C:\Users\%Username%\LocalGrpPolReport.html
 start chrome "file:///C:/Users/%username%/LocalGrpPolReport.html"
+Write-Host "Group Police Report check finished"
+Write-Host "Finished the Script"
