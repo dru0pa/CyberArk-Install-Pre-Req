@@ -212,4 +212,7 @@ Write-Host "Make sure there are no GPOs listed"
 gpresult /h "C:\Install-Folder\LocalGrpPolReport.html"
 start chrome "file:///C:/Install-Folder/LocalGrpPolReport.html"
 Write-Host "Group Police Report check finished"
+Write-Host "Checking for admin shares"
+net share > share.txt
+Write-Host "Checking for admin shares finished"
 Write-Host "Finished the Script"
