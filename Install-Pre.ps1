@@ -151,18 +151,25 @@ $installerFileN = "ndp48-x86-x64-allos-enu.exe"
 # Define the path to the local .NET Framework 4.8 installer file (replace with your actual path)
 $installerPath = "$scriptPathN\$installerFileN"
 
-# Check if .NET 4.8 is already installed
-if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Version\4.8")) {
-  # Check if the local installer file exists
-  if (Test-Path $installerPath) {
-    # Install .NET 4.8 silently
-    Start-Process -FilePath $installerPath -ArgumentList "/q /norestart" -Wait -NoNewWindow
-    Write-Host ".NET Framework 4.8 is being installed silently."
-  } else {
-    Write-Error "Error: Local installer file '$installerPath' not found."
-  }
+# Check for Windows Server 2022
+$isServer2022 = (Get-WmiObject Win32_OperatingSystem).Caption -like "*Windows Server 2022*"
+
+# Check if .NET 4.8 is already installed OR if it's Windows Server 2022
+if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Version\4.8") -and !$isServer2022) {
+    # Check if the local installer file exists
+    if (Test-Path $installerPath) {
+        # Install .NET 4.8 silently
+        Start-Process -FilePath $installerPath -ArgumentList "/q /norestart" -Wait -NoNewWindow
+        Write-Host ".NET Framework 4.8 is being installed silently."
+    } else {
+        Write-Error "Error: Local installer file '$installerPath' not found."
+    }
 } else {
-  Write-Host ".NET Framework 4.8 is already installed."
+    if ($isServer2022) {
+        Write-Host ".NET Framework 4.8 is not required for Windows Server 2022."
+    } else {
+        Write-Host ".NET Framework 4.8 is already installed."
+    }
 }
 
 # Clean-up is not recommended for local installers (commented out)
