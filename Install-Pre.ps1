@@ -44,7 +44,7 @@ Write-Host "Start NotePadd++ install"
 $scriptPathNP = Get-Location
 
 # Define installer filename (replace with actual filename if different)
-$installerFileNP = "npp.8.6.4.Installer.x64.exe"
+$installerFileNP = "npp.8.6.9.Installer.x64.exe"
 
 # Function to install Notepad++ from local file
 function InstallNotepadPlusPlus {
@@ -75,7 +75,7 @@ Write-Host "Notepad++ installation complete (if the local file was found)."
 $scriptPathvc1 = Get-Location
 
 # Define installer filename
-$installerFilevc1 = "vcredist_x86.exe"
+$installerFilevc1 = "VC_redist.x86.exe"
 
 # Function to install VC++ Redistributable (x86) from local file with error handling
 function InstallVCRedistLocal {
@@ -108,7 +108,7 @@ Write-Host "Visual C++ Redistributable (x86) installation complete (if local fil
 $scriptPathvc2 = Get-Location
 
 # Define installer filename
-$installerFilevc2 = "vcredist_x64.exe"
+$installerFilevc2 = "VC_redist.x64.exe"
 
 # Function to install VC++ Redistributable (x86) from local file with error handling
 function InstallVCRedistLocal {
@@ -177,40 +177,31 @@ if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Versio
 # # Remove-Item -Path $installerPath -Force
 
 
-# Stop Chrome Updates ScheduledTask
-Get-ScheduledTask | Where-Object { $_.Taskname -like "GoogleUpdate*" } | Disable-ScheduledTask
+# Get all services starting with "GoogleChrome"
+$chromeServices = Get-Service -Name "GoogleChrome*"
 
+# Stop and disable each service
+foreach ($service in $chromeServices) {
+    if ($service.Status -eq "Running") {
+        Stop-Service -Name $service.Name
+    }
+    Set-Service -Name $service.Name -StartupType Disabled
+}
 
-# Stop Chrome Updates disable services
-# Define log file path (replace with your preferred location and name)
-$logFilePath = "$env:USERPROFILE\Desktop\service_disable_$(Get-Date -UFormat "%Y-%m-%d_%H-%m-%S").log"
+Write-Host "All services starting with 'GoogleChrome' have been stopped and disabled."
 
-(Get-Date).ToString($dateFormat) | Out-File -FilePath $logFilePath -Append
-#
-Add-Content $logFilePath "This is going to Stop and Disable the gupdate and gupdatem."
-Add-Content $logFilePath "These are the Google services to stop Chrome from updating."
+# Get all services starting with "GoogleUpdater"
+$googleServices = Get-Service -Name "GoogleUpdater*"
 
-# Stop gupdate service
-Stop-Service -Name gupdate -PassThru | Out-File -FilePath $logFilePath -Append
-Add-Content $logFilePath "The service gupdate has been Stopped."
+# Stop and disable each service
+foreach ($service in $googleServices) {
+    if ($service.Status -eq "Running") {
+        Stop-Service -Name $service.Name
+    }
+    Set-Service -Name $service.Name -StartupType Disabled
+}
 
-# Stop gupdatem service
-Stop-Service -Name gupdatem -PassThru | Out-File -FilePath $logFilePath -Append
-Add-Content $logFilePath "The service gupdatem has been Stopped."
-
-# Disable gupdate service
-Set-Service -Name gupdate -StartupType Disabled
-Add-Content $logFilePath "`nThe service 'gupdate' has been Disabled."
-(Get-Service 'gupdate').StartType | Out-File -FilePath $logFilePath -Append
-
-# Disable gupdatem service
-Set-Service -Name gupdatem -StartupType Disabled
-Add-Content $logFilePath "`nThe service 'gupdatem' has been Disabled."
-(Get-Service 'gupdatem').StartType | Out-File -FilePath $logFilePath -Append
-
-# Show the contents of the log file
-Get-Content $logFilePath
-
+Write-Host "All services starting with 'GoogleUpdate' have been stopped and disabled."
 
 Write-Host "Chrome has been Installed and disabled services"
 
